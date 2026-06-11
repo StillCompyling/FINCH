@@ -14,7 +14,6 @@ import { TrendCard } from './components/charts/TrendCard.jsx'
 import { GoalsCard } from './components/goals/GoalsCard.jsx'
 import { RecurringView } from './components/recurring/RecurringView.jsx'
 import { MultiMonthView } from './components/trends/MultiMonthView.jsx'
-import { UpcomingCard } from './components/recurring/UpcomingCard.jsx'
 import { LcdTotal } from './components/ui/LcdTotal.jsx'
 import { BootScreen } from './components/ui/BootScreen.jsx'
 
@@ -135,7 +134,6 @@ function MonthView({ monthKey, onEdit }) {
         <GoalsCard monthKey={monthKey} />
       </Card>
 
-      <UpcomingCard span="md:col-span-6" />
 
       <Card span="md:col-span-6">
         <CardLabel>This month&rsquo;s entries</CardLabel>
