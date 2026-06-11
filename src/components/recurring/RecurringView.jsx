@@ -7,7 +7,6 @@ import { todayISO } from '../../utils/dates.js'
 import { Card, CardLabel } from '../layout/Card.jsx'
 import { Sheet, Field, inputClass, PrimaryButton, GhostButton } from '../ui/Sheet.jsx'
 import { ExpenseList } from '../expenses/ExpenseList.jsx'
-import { UpcomingCard } from './UpcomingCard.jsx'
 
 const CYCLE_LABEL = { weekly: 'week', monthly: 'month', quarterly: 'quarter', yearly: 'year' }
 
@@ -48,7 +47,6 @@ export function RecurringView({ onEditExpense }) {
         )}
       </Card>
 
-      <UpcomingCard span="md:col-span-6" />
 
       {/* Per-subscription cards */}
       {[...active, ...paused].map((r) => (

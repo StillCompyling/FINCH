@@ -35,6 +35,7 @@ export default function App() {
   if (!state.ready || !bootDone) return <BootScreen />
 
   return (
+    
     <div className="mx-auto min-h-dvh max-w-5xl px-4 pb-28 sm:px-8">
       <Header onOpenSettings={() => setSettingsOpen(true)} />
 
