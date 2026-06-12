@@ -80,7 +80,7 @@ export function SignIn() {
                 transition-transform active:translate-x-[2px] active:translate-y-[2px]
                 active:shadow-none disabled:opacity-50"
             >
-              {loading ? 'Sending…' : 'Send magic link'}
+              {loading ? 'Sending…' : 'Send sign in link'}
             </button>
             {error && (
               <p className="mt-3 font-mono text-xs text-red-600">{error}</p>
