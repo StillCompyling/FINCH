@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite'
+import { resolve } from 'path'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        app:  resolve(__dirname, 'app/index.html'),
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -20,7 +29,7 @@ export default defineConfig({
         theme_color: '#f2e8dd',
         background_color: '#f2e8dd',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/app',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
