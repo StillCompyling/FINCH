@@ -3,6 +3,7 @@ import { useStore, newId } from '../../store/StoreProvider.jsx'
 import { useCategorySuggester } from '../../hooks/useCategorySuggester.js'
 import { parseToCents, formatCents } from '../../utils/money.js'
 import { todayISO } from '../../utils/dates.js'
+import { validateExpense, sanitizeText } from '../../utils/validate.js'
 import { Sheet, Field, inputClass, PrimaryButton, GhostButton } from '../ui/Sheet.jsx'
 
 /**
@@ -46,16 +47,20 @@ export function ExpenseSheet({ open, onClose, expense }) {
   }
 
   const cents = parseToCents(amount)
-  const valid = cents !== null && cents > 0 && Boolean(date) && Boolean(categoryId)
+  const validCategoryIds = new Set(state.categories.map((c) => c.id))
+  const validationError = validateExpense({ amountCents: cents, date, note, categoryId, validCategoryIds })
+  const valid = cents !== null && cents > 0 && Boolean(date) && Boolean(categoryId) && !validationError
+
+  const [saveError, setSaveError] = useState(null)
 
   const save = () => {
-    if (!valid) return
+    if (validationError) { setSaveError(validationError); return }
     actions.upsert('expense', {
       id: expense?.id ?? newId(),
       amountCents: cents,
       categoryId,
       date,
-      note: note.trim(),
+      note: sanitizeText(note),
     })
     onClose()
   }
@@ -117,6 +122,11 @@ export function ExpenseSheet({ open, onClose, expense }) {
           </Field>
         </div>
 
+        {saveError && (
+          <p className="rounded-[6px] border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+            {saveError}
+          </p>
+        )}
         <div className="mt-2 flex flex-col gap-2">
           <PrimaryButton onClick={save} disabled={!valid}>
             {editing ? 'Save changes' : `Add ${cents > 0 ? formatCents(cents) : 'expense'}`}

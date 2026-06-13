@@ -3,7 +3,7 @@ import { useAuth } from './auth/AuthProvider.jsx'
 import { SignIn } from './auth/SignIn.jsx'
 import { StoreProvider, useStore } from './store/StoreProvider.jsx'
 import { useMonthData, useEarliestMonth } from './hooks/useMonthData.js'
-import { currentMonthKey, monthLabel, monthShortLabel, addMonths } from './utils/dates.js'
+import { currentMonthKey, monthShortLabel, addMonths } from './utils/dates.js'
 import { formatCents } from './utils/money.js'
 import { Header } from './components/layout/Header.jsx'
 import { MonthTabs } from './components/layout/MonthTabs.jsx'
@@ -18,6 +18,7 @@ import { RecurringView } from './components/recurring/RecurringView.jsx'
 import { MultiMonthView } from './components/trends/MultiMonthView.jsx'
 import { LcdTotal } from './components/ui/LcdTotal.jsx'
 import { BootScreen } from './components/ui/BootScreen.jsx'
+import { ErrorBoundary } from './components/ui/ErrorBoundary.jsx'
 
 export default function App() {
   const { session, authError } = useAuth()
@@ -33,6 +34,18 @@ export default function App() {
   )
 }
 
+function useOffline() {
+  const [offline, setOffline] = useState(!navigator.onLine)
+  useEffect(() => {
+    const on = () => setOffline(false)
+    const off = () => setOffline(true)
+    window.addEventListener('online', on)
+    window.addEventListener('offline', off)
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off) }
+  }, [])
+  return offline
+}
+
 function AppInner() {
   const { state } = useStore()
   const [view, setView] = useState('overview') // overview | trends | subscriptions
@@ -40,6 +53,7 @@ function AppInner() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [expenseSheet, setExpenseSheet] = useState(null) // null | {expense?}
   const earliestMonth = useEarliestMonth()
+  const offline = useOffline()
 
   const [bootDone, setBootDone] = useState(false)
   useEffect(() => {
@@ -49,8 +63,15 @@ function AppInner() {
 
   if (!state.ready || !bootDone) return <BootScreen />
 
+  const hasRealExpenses = state.expenses.length > 0
+
   return (
     <div className="mx-auto min-h-dvh max-w-5xl px-4 pb-28 sm:px-8">
+      {offline && (
+        <div className="sticky top-0 z-50 -mx-4 bg-ink px-4 py-2 text-center font-mono text-xs text-paper sm:-mx-8 sm:px-8">
+          You&rsquo;re offline — changes will sync when you reconnect.
+        </div>
+      )}
       <Header onOpenSettings={() => setSettingsOpen(true)} />
 
       <nav className="mt-2 flex gap-1.5" aria-label="Sections">
@@ -73,17 +94,24 @@ function AppInner() {
       {view === 'overview' && (
         <>
           <MonthTabs selected={month} onSelect={setMonth} earliestWithData={earliestMonth} />
-          <MonthView key={month} monthKey={month} onEdit={(e) => setExpenseSheet({ expense: e })} />
+          {!hasRealExpenses && <WelcomeCard onAdd={() => setExpenseSheet({})} />}
+          <ErrorBoundary label="Overview">
+            <MonthView key={month} monthKey={month} onEdit={(e) => setExpenseSheet({ expense: e })} />
+          </ErrorBoundary>
         </>
       )}
       {view === 'trends' && (
         <div className="pt-4">
-          <MultiMonthView />
+          <ErrorBoundary label="Trends">
+            <MultiMonthView />
+          </ErrorBoundary>
         </div>
       )}
       {view === 'subscriptions' && (
         <div className="pt-4">
-          <RecurringView onEditExpense={(e) => setExpenseSheet({ expense: e })} />
+          <ErrorBoundary label="Subscriptions">
+            <RecurringView onEditExpense={(e) => setExpenseSheet({ expense: e })} />
+          </ErrorBoundary>
         </div>
       )}
 
@@ -107,6 +135,30 @@ function AppInner() {
         />
       )}
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </div>
+  )
+}
+
+function WelcomeCard({ onAdd }) {
+  return (
+    <div className="mb-4 mt-3 rounded-[8px] border-[1.5px] border-ink bg-white p-5 shadow-card">
+      <p className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-ink-soft">
+        Welcome to Finch
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-ink">
+        Track every expense, set spending goals, and see where your money actually goes.
+        Start by adding your first expense.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={onAdd}
+          className="rounded-[6px] border-[1.5px] border-ink bg-pink px-4 py-2 font-mono text-xs
+            font-bold uppercase tracking-[0.06em] text-ink shadow-card transition-transform
+            active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+        >
+          + Add expense
+        </button>
+      </div>
     </div>
   )
 }
@@ -135,36 +187,46 @@ function MonthView({ monthKey, onEdit }) {
 
   return (
     <main className="animate-rise grid grid-cols-1 gap-4 pt-1 md:grid-cols-6">
-      <LcdTotal
-        span="md:col-span-3"
-        monthKey={monthKey}
-        totalCents={totalCents}
-        prevTotalCents={previous.totalCents}
-      />
+      <ErrorBoundary label="Total">
+        <LcdTotal
+          span="md:col-span-3"
+          monthKey={monthKey}
+          totalCents={totalCents}
+          prevTotalCents={previous.totalCents}
+        />
+      </ErrorBoundary>
 
       <Card span="md:col-span-3">
         <CardLabel>Category breakdown</CardLabel>
-        <DonutCard byCategory={byCategory} totalCents={totalCents} />
+        <ErrorBoundary label="Donut chart">
+          <DonutCard byCategory={byCategory} totalCents={totalCents} />
+        </ErrorBoundary>
       </Card>
 
       <Card span="md:col-span-4">
         <CardLabel>Spending over time</CardLabel>
-        <TrendCard
-          cumulative={cumulative}
-          previousCumulative={previous.cumulative}
-          monthShort={monthShortLabel(monthKey)}
-          prevMonthShort={monthShortLabel(prevKey)}
-        />
+        <ErrorBoundary label="Trend chart">
+          <TrendCard
+            cumulative={cumulative}
+            previousCumulative={previous.cumulative}
+            monthShort={monthShortLabel(monthKey)}
+            prevMonthShort={monthShortLabel(prevKey)}
+          />
+        </ErrorBoundary>
       </Card>
 
       <Card span="md:col-span-2">
         <CardLabel>Goals</CardLabel>
-        <GoalsCard monthKey={monthKey} />
+        <ErrorBoundary label="Goals">
+          <GoalsCard monthKey={monthKey} />
+        </ErrorBoundary>
       </Card>
 
       <Card span="md:col-span-6">
         <CardLabel>This month&rsquo;s entries</CardLabel>
-        <ExpenseList entries={visibleEntries} onEdit={onEdit} />
+        <ErrorBoundary label="Expense list">
+          <ExpenseList entries={visibleEntries} onEdit={onEdit} />
+        </ErrorBoundary>
       </Card>
     </main>
   )
