@@ -8,6 +8,10 @@ async function getUserId() {
   return user.id
 }
 
+// Namespace the Supabase row PK so two users with the same app-level record id
+// (e.g. 'cat-rent', 'theme') never collide on the shared table primary key.
+const rowId = (userId, recordId) => `${userId}/${recordId}`
+
 export async function loadAll() {
   const results = {}
   await Promise.all(
@@ -24,26 +28,33 @@ export async function put(storeName, record) {
   const user_id = await getUserId()
   const { error } = await supabase
     .from(storeName)
-    .upsert({ id: record.id, user_id, data: record, updated_at: new Date().toISOString() })
+    .upsert({ id: rowId(user_id, record.id), user_id, data: record, updated_at: new Date().toISOString() })
   if (error) throw error
 }
 
 export async function putMany(storeName, records) {
   if (!records.length) return
   const user_id = await getUserId()
-  const rows = records.map((r) => ({ id: r.id, user_id, data: r, updated_at: new Date().toISOString() }))
+  const rows = records.map((r) => ({
+    id: rowId(user_id, r.id), user_id, data: r, updated_at: new Date().toISOString(),
+  }))
   const { error } = await supabase.from(storeName).upsert(rows)
   if (error) throw error
 }
 
 export async function remove(storeName, id) {
-  const { error } = await supabase.from(storeName).delete().eq('id', id)
+  const user_id = await getUserId()
+  const { error } = await supabase.from(storeName).delete().eq('id', rowId(user_id, id))
   if (error) throw error
 }
 
 export async function removeMany(storeName, ids) {
   if (!ids.length) return
-  const { error } = await supabase.from(storeName).delete().in('id', ids)
+  const user_id = await getUserId()
+  const { error } = await supabase
+    .from(storeName)
+    .delete()
+    .in('id', ids.map((id) => rowId(user_id, id)))
   if (error) throw error
 }
 
@@ -54,7 +65,9 @@ export async function replaceAll(data) {
     if (delErr) throw delErr
     const records = data[name] ?? []
     if (records.length > 0) {
-      const rows = records.map((r) => ({ id: r.id, user_id, data: r, updated_at: new Date().toISOString() }))
+      const rows = records.map((r) => ({
+        id: rowId(user_id, r.id), user_id, data: r, updated_at: new Date().toISOString(),
+      }))
       const { error: insErr } = await supabase.from(name).insert(rows)
       if (insErr) throw insErr
     }

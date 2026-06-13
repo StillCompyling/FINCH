@@ -68,34 +68,46 @@ export function StoreProvider({ children }) {
   useEffect(() => {
     let cancelled = false
     ;(async () => {
+      let data
       try {
-        let data = await db.loadAll()
-        const isFirstRun = data.categories.length === 0
-        if (isFirstRun) {
-          data = buildSeedData()
-          await db.replaceAll(data)
-        } else {
-          // Palette migration: move default categories the user never
-          // recolored onto the current default palette.
-          const updates = []
-          for (const def of DEFAULT_CATEGORIES) {
-            const stored = data.categories.find((c) => c.id === def.id)
-            if (stored && stored.color !== def.color && LEGACY_DEFAULT_COLORS.has(stored.color)) {
-              updates.push({ ...stored, color: def.color })
-            }
-          }
-          if (updates.length > 0) {
-            data.categories = data.categories.map(
-              (c) => updates.find((u) => u.id === c.id) ?? c,
-            )
-            await db.putMany('categories', updates)
+        data = await db.loadAll()
+      } catch (err) {
+        console.error('Failed to load data from Supabase', err)
+        if (!cancelled) {
+          setError(err)
+          dispatch({ type: 'hydrate', data: { expenses: [], recurring: [], categories: [], goals: [], settings: [] } })
+        }
+        return
+      }
+
+      const isFirstRun = data.categories.length === 0
+      if (isFirstRun) {
+        const seedData = buildSeedData()
+        try {
+          await db.replaceAll(seedData)
+        } catch (err) {
+          console.error('Seeding failed, continuing with empty data', err)
+        }
+        data = seedData
+      } else {
+        // Palette migration: move default categories the user never
+        // recolored onto the current default palette.
+        const updates = []
+        for (const def of DEFAULT_CATEGORIES) {
+          const stored = data.categories.find((c) => c.id === def.id)
+          if (stored && stored.color !== def.color && LEGACY_DEFAULT_COLORS.has(stored.color)) {
+            updates.push({ ...stored, color: def.color })
           }
         }
-        if (!cancelled) dispatch({ type: 'hydrate', data })
-      } catch (err) {
-        console.error('Failed to load data', err)
-        if (!cancelled) setError(err)
+        if (updates.length > 0) {
+          data.categories = data.categories.map(
+            (c) => updates.find((u) => u.id === c.id) ?? c,
+          )
+          await db.putMany('categories', updates).catch((err) => console.error('Palette migration failed', err))
+        }
       }
+
+      if (!cancelled) dispatch({ type: 'hydrate', data })
     })()
     return () => { cancelled = true }
   }, [])
