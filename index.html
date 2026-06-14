@@ -22,6 +22,27 @@
   <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
+  <!-- One-time migration: clear SW caches from pre-MPA build where NavigationRoute
+       served index.html for all navigations, breaking /app navigation. -->
+  <script>
+    (function () {
+      var V = 'finch-sw-mpa-v1';
+      if (localStorage.getItem('finch-sw-v') !== V) {
+        localStorage.setItem('finch-sw-v', V);
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (r) { r.unregister(); });
+          });
+        }
+        if ('caches' in window) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (k) { caches.delete(k); });
+          });
+        }
+      }
+    })();
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
