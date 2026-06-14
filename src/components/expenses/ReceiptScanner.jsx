@@ -112,8 +112,10 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
         return
       }
 
+      console.log('[scan] sending image', Math.round(imageBase64.length * 0.75 / 1024), 'KB')
+
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 15000)
+      const timeoutId = setTimeout(() => controller.abort(), 60000)
 
       let res
       try {
@@ -129,6 +131,8 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
       } finally {
         clearTimeout(timeoutId)
       }
+
+      console.log('[scan] response', res.status, res.ok)
 
       if (res.status === 401) throw Object.assign(new Error(), { code: 'auth' })
       if (res.status === 502) throw Object.assign(new Error(), { code: 'unavailable' })
