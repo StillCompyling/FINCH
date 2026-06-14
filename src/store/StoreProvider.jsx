@@ -116,19 +116,31 @@ export function StoreProvider({ children }) {
   const actions = {
     upsert(kind, record) {
       dispatch({ type: 'upsert', kind, record })
-      db.put(COLLECTION_OF[kind], record).catch(setError)
+      db.put(COLLECTION_OF[kind], record).catch((err) => {
+        console.error(`[store] upsert ${kind} ${record.id} failed`, err)
+        setError(err)
+      })
     },
     upsertMany(kind, records) {
       dispatch({ type: 'upsertMany', kind, records })
-      db.putMany(COLLECTION_OF[kind], records).catch(setError)
+      db.putMany(COLLECTION_OF[kind], records).catch((err) => {
+        console.error(`[store] upsertMany ${kind} (${records.length}) failed`, err)
+        setError(err)
+      })
     },
     remove(kind, id) {
       dispatch({ type: 'remove', kind, id })
-      db.remove(COLLECTION_OF[kind], id).catch(setError)
+      db.remove(COLLECTION_OF[kind], id).catch((err) => {
+        console.error(`[store] remove ${kind} ${id} failed`, err)
+        setError(err)
+      })
     },
     removeMany(kind, ids) {
       dispatch({ type: 'removeMany', kind, ids })
-      db.removeMany(COLLECTION_OF[kind], ids).catch(setError)
+      db.removeMany(COLLECTION_OF[kind], ids).catch((err) => {
+        console.error(`[store] removeMany ${kind} [${ids.join(',')}] failed`, err)
+        setError(err)
+      })
     },
     /** Restore from a JSON backup: replaces everything. */
     async restoreAll(data) {

@@ -3,9 +3,12 @@ import { supabase } from './supabase.js'
 export const STORE_NAMES = ['expenses', 'recurring', 'categories', 'goals', 'settings']
 
 async function getUserId() {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
-  return user.id
+  // getSession() reads from localStorage — no network round-trip.
+  // The JWT is sent automatically on every Supabase query; RLS enforces security server-side.
+  // Using getUser() (server-validated) caused transient failures that silently swallowed deletes/edits.
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user) throw new Error('Not authenticated')
+  return session.user.id
 }
 
 // Namespace the Supabase row PK so two users with the same app-level record id
