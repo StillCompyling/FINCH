@@ -1,14 +1,22 @@
 import { createContext, useContext, useEffect, useReducer, useState } from 'react'
 import * as db from '../db/database.js'
-import { buildSeedData, DEFAULT_CATEGORIES, LEGACY_DEFAULT_COLORS } from './seed.js'
 
-/**
- * Single source of truth. The reducer holds the full dataset in memory;
- * every mutation both updates state AND writes through to IndexedDB.
- *
- * Collections: expenses, recurring, categories, goals, settings.
- * All views derive from this via hooks — no component owns data.
- */
+export const DEFAULT_CATEGORIES = [
+  { id: 'cat-rent',          name: 'Rent / Bills',  color: '#0e3d24', icon: 'home' },
+  { id: 'cat-groceries',     name: 'Groceries',     color: '#14532d', icon: 'basket' },
+  { id: 'cat-dining',        name: 'Dining',        color: '#178a4c', icon: 'utensils' },
+  { id: 'cat-transport',     name: 'Transport',     color: '#3fa56f', icon: 'train' },
+  { id: 'cat-shopping',      name: 'Shopping',      color: '#73bd94', icon: 'bag' },
+  { id: 'cat-subscriptions', name: 'Subscriptions', color: '#a8d6bc', icon: 'repeat' },
+  { id: 'cat-health',        name: 'Health',        color: '#5d6b4a', icon: 'heart' },
+  { id: 'cat-entertainment', name: 'Entertainment', color: '#8a8576', icon: 'film' },
+  { id: 'cat-other',         name: 'Other',         color: '#b5b1a4', icon: 'dots' },
+]
+
+const LEGACY_DEFAULT_COLORS = new Set([
+  '#6a9c78', '#d97757', '#5d8aa8', '#8a7e6d', '#b08bbd', '#c4554d', '#cf9b4a', '#7d79a0', '#8a867c',
+  '#3f7d54', '#b3683f', '#46708e', '#6e6759', '#7d5e8c', '#a4504a', '#a8842f', '#56557e', '#83807a',
+])
 
 const StoreContext = createContext(null)
 
@@ -64,7 +72,6 @@ export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, EMPTY)
   const [error, setError] = useState(null)
 
-  // Rehydrate on boot; seed example data on very first run.
   useEffect(() => {
     let cancelled = false
     ;(async () => {
@@ -80,15 +87,12 @@ export function StoreProvider({ children }) {
         return
       }
 
-      const isFirstRun = data.categories.length === 0
-      if (isFirstRun) {
-        const seedData = buildSeedData()
-        try {
-          await db.replaceAll(seedData)
-        } catch (err) {
-          console.error('Seeding failed, continuing with empty data', err)
-        }
-        data = seedData
+      // First run: seed default categories only, no example data.
+      if (data.categories.length === 0) {
+        await db.putMany('categories', DEFAULT_CATEGORIES).catch((err) =>
+          console.error('Category init failed', err),
+        )
+        data = { ...data, categories: DEFAULT_CATEGORIES }
       } else {
         // Palette migration: move default categories the user never
         // recolored onto the current default palette.
@@ -104,6 +108,31 @@ export function StoreProvider({ children }) {
             (c) => updates.find((u) => u.id === c.id) ?? c,
           )
           await db.putMany('categories', updates).catch((err) => console.error('Palette migration failed', err))
+        }
+      }
+
+      // One-time cleanup: silently remove example data written by previous app versions.
+      const alreadyCleaned = data.settings.find((s) => s.id === 'seedCleanedAt')
+      if (!alreadyCleaned) {
+        const seedExpenseIds = data.expenses.filter((e) => e.seed).map((e) => e.id)
+        const seedRecurringIds = data.recurring.filter((r) => r.seed).map((r) => r.id)
+        if (seedExpenseIds.length > 0) {
+          await db.removeMany('expenses', seedExpenseIds).catch((err) =>
+            console.error('Seed cleanup (expenses) failed', err),
+          )
+          data = { ...data, expenses: data.expenses.filter((e) => !e.seed) }
+        }
+        if (seedRecurringIds.length > 0) {
+          await db.removeMany('recurring', seedRecurringIds).catch((err) =>
+            console.error('Seed cleanup (recurring) failed', err),
+          )
+          data = { ...data, recurring: data.recurring.filter((r) => !r.seed) }
+        }
+        const cleanedSetting = { id: 'seedCleanedAt', value: new Date().toISOString() }
+        await db.put('settings', cleanedSetting).catch(() => {})
+        data = {
+          ...data,
+          settings: [...data.settings.filter((s) => s.id !== 'seedCleanedAt'), cleanedSetting],
         }
       }
 
