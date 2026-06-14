@@ -85,7 +85,7 @@ export default async function handler(req) {
             { text: RECEIPT_PROMPT },
           ],
         }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 512 },
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 },
       }),
     },
   )
