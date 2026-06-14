@@ -130,3 +130,23 @@ After deploying, check headers at [securityheaders.com](https://securityheaders.
 `GET /health` should return `{"status":"ok","app":"finch"}` with HTTP 200.
 
 Set up an uptime monitor (UptimeRobot free tier) pointed at `https://your-domain.com/health`.
+
+---
+
+## Section 5 — Receipt Scanning (Gemini AI)
+
+Three server-side env vars — **no `VITE_` prefix, never in browser bundle**:
+
+| Variable | Where to get it |
+|---|---|
+| `GEMINI_API_KEY` | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) — free tier is generous |
+| `SUPABASE_URL` | Same value as `VITE_SUPABASE_URL` (project URL, not REST URL) |
+| `SUPABASE_SERVICE_KEY` | Supabase → Settings → API → **service_role** key — keep this secret, has admin access |
+
+Add all three to:
+- **Vercel**: Project → Settings → Environment Variables (Production)
+- **Local dev**: `.env.local` (without `VITE_` prefix — Vercel Edge Functions read `process.env` directly)
+
+The `/api/scan-receipt` endpoint validates the Supabase JWT on every request — only authenticated Finch users can call it.
+
+Rate limit: 10 scans per user per hour (enforced client-side via `localStorage`).
