@@ -176,7 +176,6 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
         ref={fileRef}
         type="file"
         accept="image/*"
-        capture="environment"
         className="sr-only"
         onChange={handleFile}
       />
