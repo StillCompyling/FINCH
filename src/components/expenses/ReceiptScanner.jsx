@@ -26,7 +26,7 @@ function blockedForMs() {
   return ts[0] + RL_WINDOW - Date.now()
 }
 
-async function resizeImage(file, maxPx = 1600) {
+async function resizeImage(file, maxPx = 600, quality = 0.5) {
   return new Promise((resolve) => {
     const img = new Image()
     const url = URL.createObjectURL(file)
@@ -37,7 +37,7 @@ async function resizeImage(file, maxPx = 1600) {
       canvas.height = Math.round(img.height * scale)
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
       URL.revokeObjectURL(url)
-      canvas.toBlob(resolve, 'image/jpeg', 0.85)
+      canvas.toBlob(resolve, 'image/jpeg', quality)
     }
     img.onerror = () => {
       URL.revokeObjectURL(url)
@@ -99,8 +99,19 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
     setNotice(null)
 
     try {
-      let blob = await resizeImage(file)
-      if (!blob) blob = file
+      let blob = await resizeImage(file, 600, 0.5)
+      if (!blob) {
+        blob = file
+      } else {
+        console.log('[scan] pass 1 size', Math.round(blob.size / 1024), 'KB')
+        if (blob.size > 150 * 1024) {
+          const blob2 = await resizeImage(blob, 400, 0.4)
+          if (blob2) {
+            blob = blob2
+            console.log('[scan] pass 2 size', Math.round(blob.size / 1024), 'KB')
+          }
+        }
+      }
 
       const dataUrl = await blobToBase64(blob)
       const imageBase64 = dataUrl.split(',')[1]
