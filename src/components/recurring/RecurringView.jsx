@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useStore, newId } from '../../store/StoreProvider.jsx'
 import { sanitizeText, validateRecurring } from '../../utils/validate.js'
 import { useCategoryIndex } from '../../hooks/useMonthData.js'
-import { annualizedCents, projectionLadder, CYCLES } from '../../utils/recurrence.js'
+import { annualizedCents, monthlyizedCents, projectionLadder, CYCLES } from '../../utils/recurrence.js'
 import { formatCents, formatCentsWhole, parseToCents } from '../../utils/money.js'
 import { todayISO } from '../../utils/dates.js'
 import { Card, CardLabel } from '../layout/Card.jsx'
@@ -16,6 +16,7 @@ export function RecurringView({ onEditExpense }) {
   const { state, actions } = useStore()
   const [editing, setEditing] = useState(null) // recurring | 'new'
   const [showArchived, setShowArchived] = useState(false)
+  const [view, setView] = useState('monthly') // 'monthly' | 'yearly' — resets on tab remount
 
   const active = state.recurring.filter((r) => r.status === 'active')
   const paused = state.recurring.filter((r) => r.status === 'paused')
@@ -31,7 +32,10 @@ export function RecurringView({ onEditExpense }) {
     <main className="animate-rise grid grid-cols-1 gap-4 md:grid-cols-6">
       {/* Headline: what subscriptions really cost */}
       <Card span="md:col-span-6">
-        <CardLabel>All subscriptions — true cost</CardLabel>
+        <div className="flex items-start justify-between gap-4">
+          <CardLabel>All subscriptions — true cost</CardLabel>
+          {active.length > 0 && <ViewToggle value={view} onChange={setView} />}
+        </div>
         {active.length === 0 ? (
           <p className="py-6 text-sm text-ink-faint dark:text-snow-faint">
             No active subscriptions. Add Netflix, the gym, that app you forgot about…
@@ -39,12 +43,16 @@ export function RecurringView({ onEditExpense }) {
         ) : (
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:gap-10">
             <div className="shrink-0">
-              <p className="figure-serif text-5xl">{formatCentsWhole(combined.monthly)}</p>
+              <p className="figure-serif text-5xl">
+                {formatCentsWhole(view === 'monthly' ? combined.monthly : combined.annual)}
+              </p>
               <p className="mt-1 text-sm text-ink-soft dark:text-snow-soft">
-                per month · {active.length} active subscription{active.length !== 1 && 's'}
+                {view === 'monthly' ? 'per month' : 'per year'} · {active.length} active subscription{active.length !== 1 && 's'}
               </p>
               <p className="mt-0.5 text-xs text-ink-faint dark:text-snow-faint">
-                {formatCentsWhole(combined.annual)} per year
+                {view === 'monthly'
+                  ? `${formatCentsWhole(combined.annual)} per year`
+                  : `${formatCentsWhole(combined.monthly)} per month`}
               </p>
             </div>
             <CostLadder ladder={combined.ladder} large />
@@ -55,7 +63,7 @@ export function RecurringView({ onEditExpense }) {
 
       {/* Per-subscription cards */}
       {[...active, ...paused].map((r) => (
-        <SubscriptionCard key={r.id} sub={r} onEdit={() => setEditing(r)}
+        <SubscriptionCard key={r.id} sub={r} view={view} onEdit={() => setEditing(r)}
           onToggle={() => actions.upsert('recurring', { ...r, status: r.status === 'active' ? 'paused' : 'active' })} />
       ))}
 
@@ -130,6 +138,26 @@ function OneOffSubscriptionCharges({ onEdit }) {
   )
 }
 
+/** Monthly/Yearly pill toggle — matches the app's segmented control style. */
+function ViewToggle({ value, onChange }) {
+  return (
+    <div className="flex shrink-0 gap-1 rounded-full bg-line/50 p-1 dark:bg-night-line/50">
+      {[['monthly', 'Monthly'], ['yearly', 'Yearly']].map(([v, label]) => (
+        <button
+          key={v}
+          onClick={() => onChange(v)}
+          className={`rounded-full px-3 py-1 text-xs font-medium transition-all
+            ${value === v
+              ? 'bg-paper-raised shadow-card dark:bg-night-raised dark:shadow-card-dark'
+              : 'text-ink-soft hover:text-ink dark:text-snow-soft dark:hover:text-snow'}`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 /** Horizontal cost ladder: 1/2/5/10-year bars, normalized to the 10y total. */
 function CostLadder({ ladder, large = false }) {
   const max = ladder[ladder.length - 1].totalCents
@@ -158,10 +186,14 @@ function CostLadder({ ladder, large = false }) {
   )
 }
 
-function SubscriptionCard({ sub, onEdit, onToggle }) {
+function SubscriptionCard({ sub, view, onEdit, onToggle }) {
   const categoryOf = useCategoryIndex()
   const cat = sub.categoryId ? categoryOf(sub.categoryId) : null
   const paused = sub.status === 'paused'
+  const shownCents = view === 'monthly'
+    ? monthlyizedCents(sub.amountCents, sub.cycle)
+    : annualizedCents(sub.amountCents, sub.cycle)
+  const shownPer = view === 'monthly' ? 'month' : 'year'
 
   return (
     <Card span="md:col-span-3" className={paused ? 'opacity-60' : ''}>
@@ -171,7 +203,7 @@ function SubscriptionCard({ sub, onEdit, onToggle }) {
             {sub.name}
           </p>
           <p className="tnum mt-0.5 text-sm text-ink-soft dark:text-snow-soft">
-            {formatCents(sub.amountCents)} / {CYCLE_LABEL[sub.cycle]}
+            {formatCents(shownCents)} / {shownPer}
             {cat && <span className="text-ink-faint dark:text-snow-faint"> · {cat.name}</span>}
             {paused && <span className="ml-1.5 text-xs font-semibold uppercase tracking-wide text-warn">paused</span>}
           </p>

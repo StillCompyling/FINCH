@@ -25,6 +25,11 @@ export function annualizedCents(amountCents, cycle) {
   return amountCents * periods
 }
 
+/** Monthly-equivalent cost in cents (annualized / 12). */
+export function monthlyizedCents(amountCents, cycle) {
+  return Math.round(annualizedCents(amountCents, cycle) / 12)
+}
+
 /**
  * Projected total cost in cents over `years` years.
  * projectCost(1599, 'monthly', 10) -> 1599 * 12 * 10
