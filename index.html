@@ -458,6 +458,83 @@
       .card-donut { width: 162px; right: 0; }
       .card-list  { width: 195px; top: 175px; }
     }
+
+    /* ─── Demo Widgets ────────────────────────────── */
+    .demo-card {
+      background: var(--card); border: var(--border); border-radius: var(--radius);
+      box-shadow: var(--card-shadow); padding: 1.4rem 1.5rem;
+      display: flex; flex-direction: column; min-height: 290px;
+    }
+    .demo-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.9rem; }
+    .demo-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); }
+    .demo-try { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+
+    /* Donut */
+    .donut-demo { display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .donut-wrap { position: relative; }
+    .dseg { transition: stroke-dasharray 0.55s ease, opacity 0.18s; cursor: pointer; }
+    .donut-ctr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+    .dc-a { font-family: var(--serif); font-size: 1.3rem; line-height: 1; color: var(--ink); }
+    .dc-l { font-size: 0.52rem; color: var(--ink-faint); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.15rem; }
+    .dleg { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; margin-top: 0.65rem; justify-content: center; }
+    .dleg-i { display: flex; align-items: center; gap: 0.3rem; font-size: 0.54rem; color: var(--ink-soft); cursor: pointer; padding: 0.2rem 0; }
+    .dleg-d { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Subs */
+    .stog-row { display: flex; border: var(--border); border-radius: 999px; overflow: hidden; align-self: flex-start; margin-bottom: 0.65rem; }
+    .stog { font-family: var(--font); font-size: 0.56rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: none; border: none; padding: 0.3rem 0.85rem; cursor: pointer; color: var(--ink-faint); transition: background 0.15s, color 0.15s; }
+    .stog.on { background: var(--ink); color: var(--bg); }
+    .sub-big { margin-bottom: 0.6rem; }
+    .sub-ttl { font-family: var(--serif); font-size: 1.75rem; line-height: 1; color: var(--ink); }
+    .sub-per { font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.05em; margin-left: 0.3rem; }
+    .sub-rows { display: flex; flex-direction: column; margin-bottom: 0.65rem; }
+    .sub-r { display: flex; align-items: center; justify-content: space-between; font-size: 0.65rem; color: var(--ink-soft); padding: 0.3rem 0; border-bottom: 1px solid var(--line); }
+    .sub-r:last-child { border-bottom: none; }
+    .sub-a { font-weight: 700; color: var(--ink); }
+    .sbar-rows { display: flex; flex-direction: column; gap: 0.3rem; }
+    .sbar-r { display: flex; align-items: center; gap: 0.5rem; }
+    .sbar-l { font-size: 0.48rem; color: var(--ink-faint); width: 22px; text-align: right; flex-shrink: 0; }
+    .sbar-t { flex: 1; height: 5px; background: var(--line); border-radius: 999px; overflow: hidden; }
+    .sbar-f { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.55s ease; width: 0%; }
+
+    /* Goals */
+    .glist { display: flex; flex-direction: column; gap: 0.9rem; flex: 1; }
+    .gitem-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.2rem; }
+    .gnm { font-size: 0.7rem; color: var(--ink); }
+    .gbadge { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .g-ok-t { color: #178a4c; } .g-warn-t { color: #b45309; } .g-over-t { color: #c4303a; }
+    .gsub { font-size: 0.56rem; color: var(--ink-faint); margin-bottom: 0.35rem; }
+    .gtrack { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+    .gbar { height: 100%; border-radius: 999px; transition: width 0.5s ease, background-color 0.4s ease; }
+    .g-ok   { background-color: #178a4c; }
+    .g-warn { background-color: #b45309; }
+    .g-over { background-color: #c4303a; }
+    .gadd { margin-top: 0.9rem; font-family: var(--font); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--bg-raised); border: var(--border); border-radius: var(--radius); padding: 0.45rem 0.9rem; cursor: pointer; color: var(--ink); box-shadow: 2px 2px 0 0 var(--ink); transition: transform 0.08s, box-shadow 0.08s; }
+    .gadd:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
+    .gadd:active { transform: translate(2px,2px); box-shadow: none; }
+
+    /* Scanner */
+    .scan-s { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 0.6rem; text-align: center; }
+    .scan-s.off { display: none !important; }
+    .scan-btn { font-family: var(--font); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--pink); border: var(--border); border-radius: var(--radius); padding: 0.7rem 1.4rem; cursor: pointer; color: var(--ink); box-shadow: var(--btn-shadow); transition: transform 0.08s, box-shadow 0.08s; }
+    .scan-btn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 0 var(--ink); }
+    .scan-btn:active { transform: translate(3px,3px); box-shadow: none; }
+    .scan-hint { font-size: 0.52rem; color: var(--ink-faint); }
+    .spin { width: 26px; height: 26px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin-lbl { font-size: 0.6rem; color: var(--ink-soft); letter-spacing: 0.1em; text-transform: uppercase; }
+    .srf { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; width: 100%; }
+    .sf { display: flex; align-items: baseline; gap: 0.5rem; padding: 0.3rem 0; border-bottom: 1px solid var(--line); }
+    .sf:last-of-type { border-bottom: none; }
+    .sfl { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); width: 58px; flex-shrink: 0; }
+    .sfv { font-size: 0.7rem; color: var(--ink); min-height: 1em; }
+    .scan-save { margin-top: 0.6rem; font-family: var(--font); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); border: var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; cursor: pointer; color: #fff; box-shadow: 2px 2px 0 0 var(--ink); transition: transform 0.08s, box-shadow 0.08s; }
+    .scan-save:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
+    .scan-chk { font-size: 2.2rem; color: var(--accent); }
+    .scan-svd-lbl { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); }
+    .scan-rst { font-family: var(--font); font-size: 0.56rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: none; border: var(--border); border-radius: var(--radius); padding: 0.35rem 0.85rem; cursor: pointer; color: var(--ink-faint); margin-top: 0.2rem; }
+
+    @media (max-width: 800px) { .demo-card { min-height: 260px; } }
   </style>
 </head>
 <body>
@@ -602,40 +679,129 @@
   <p class="sec-label">What Finch does</p>
   <div class="feat-grid">
 
-    <div class="feat-card">
-      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="8"/>
-        <path d="M12 7v5l3 3"/>
-        <path d="M3.5 7.5l1.5 1M3.5 16.5l1.5-1M12 20.5v-1.5M20.5 16.5l-1.5-1M20.5 7.5l-1.5 1"/>
-      </svg>
-      <h3 class="feat-title">Beautiful charts</h3>
-      <p class="feat-desc">See exactly where your money goes with interactive donut charts, cumulative spend graphs, and multi-month trend views. Every category, every euro, at a glance.</p>
+    <!-- ── Demo 1: Donut Chart ── -->
+    <div class="demo-card">
+      <div class="demo-hdr">
+        <span class="demo-name">Beautiful charts</span>
+        <span class="demo-try">Try it →</span>
+      </div>
+      <div class="donut-demo">
+        <div class="donut-wrap">
+          <svg width="130" height="130" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--line)" stroke-width="15"/>
+            <circle class="dseg" data-name="Groceries" data-amt="€342"
+              cx="50" cy="50" r="40" fill="none" stroke="#14532d" stroke-width="15"
+              stroke-dasharray="0 251.33" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+            <circle class="dseg" data-name="Dining" data-amt="€187"
+              cx="50" cy="50" r="40" fill="none" stroke="#178a4c" stroke-width="15"
+              stroke-dasharray="0 251.33" stroke-dashoffset="-100.28" transform="rotate(-90 50 50)"/>
+            <circle class="dseg" data-name="Transport" data-amt="€94"
+              cx="50" cy="50" r="40" fill="none" stroke="#3fa56f" stroke-width="15"
+              stroke-dasharray="0 251.33" stroke-dashoffset="-155.10" transform="rotate(-90 50 50)"/>
+            <circle class="dseg" data-name="Shopping" data-amt="€156"
+              cx="50" cy="50" r="40" fill="none" stroke="#73bd94" stroke-width="15"
+              stroke-dasharray="0 251.33" stroke-dashoffset="-182.67" transform="rotate(-90 50 50)"/>
+            <circle class="dseg" data-name="Other" data-amt="€78"
+              cx="50" cy="50" r="40" fill="none" stroke="#b5b1a4" stroke-width="15"
+              stroke-dasharray="0 251.33" stroke-dashoffset="-228.39" transform="rotate(-90 50 50)"/>
+          </svg>
+          <div class="donut-ctr">
+            <div class="dc-a" id="dcA">€857</div>
+            <div class="dc-l" id="dcL">total</div>
+          </div>
+        </div>
+        <div class="dleg">
+          <div class="dleg-i" data-idx="0"><span class="dleg-d" style="background:#14532d"></span>Groceries</div>
+          <div class="dleg-i" data-idx="1"><span class="dleg-d" style="background:#178a4c"></span>Dining</div>
+          <div class="dleg-i" data-idx="2"><span class="dleg-d" style="background:#3fa56f"></span>Transport</div>
+          <div class="dleg-i" data-idx="3"><span class="dleg-d" style="background:#73bd94"></span>Shopping</div>
+          <div class="dleg-i" data-idx="4"><span class="dleg-d" style="background:#b5b1a4"></span>Other</div>
+        </div>
+      </div>
     </div>
 
-    <div class="feat-card">
-      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 12a9 9 0 0 1 15.5-6.2M21 12a9 9 0 0 1-15.5 6.2"/>
-        <path d="M17.5 2v4h-4M6.5 22v-4h4"/>
-      </svg>
-      <h3 class="feat-title">Subscription tracker</h3>
-      <p class="feat-desc">Know the true 1, 2, 5, and 10-year cost of every subscription before you forget about it. The real numbers have a way of focusing the mind.</p>
+    <!-- ── Demo 2: Subscription Tracker ── -->
+    <div class="demo-card">
+      <div class="demo-hdr">
+        <span class="demo-name">Subscription tracker</span>
+        <span class="demo-try">Try it →</span>
+      </div>
+      <div class="stog-row">
+        <button class="stog on" id="stMo" onclick="subView('mo')">Monthly</button>
+        <button class="stog" id="stYr" onclick="subView('yr')">Yearly</button>
+      </div>
+      <div class="sub-big">
+        <span class="sub-ttl" id="subT">€55,97</span>
+        <span class="sub-per" id="subP">per month</span>
+      </div>
+      <div class="sub-rows">
+        <div class="sub-r"><span>Netflix</span><span class="sub-a" id="s0">€15,99</span></div>
+        <div class="sub-r"><span>Spotify</span><span class="sub-a" id="s1">€9,99</span></div>
+        <div class="sub-r"><span>Gym</span><span class="sub-a" id="s2">€29,99</span></div>
+      </div>
+      <div class="sbar-rows">
+        <div class="sbar-r"><span class="sbar-l">1yr</span><div class="sbar-t"><div class="sbar-f" id="sb0"></div></div></div>
+        <div class="sbar-r"><span class="sbar-l">2yr</span><div class="sbar-t"><div class="sbar-f" id="sb1"></div></div></div>
+        <div class="sbar-r"><span class="sbar-l">5yr</span><div class="sbar-t"><div class="sbar-f" id="sb2"></div></div></div>
+        <div class="sbar-r"><span class="sbar-l">10yr</span><div class="sbar-t"><div class="sbar-f" id="sb3"></div></div></div>
+      </div>
     </div>
 
-    <div class="feat-card">
-      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20V10M18 20V4M6 20v-4"/>
-      </svg>
-      <h3 class="feat-title">Smart goals</h3>
-      <p class="feat-desc">Set monthly or weekly spending budgets by category. Color-coded progress tells you instantly whether you're on track, close, or over — no spreadsheet required.</p>
+    <!-- ── Demo 3: Smart Goals ── -->
+    <div class="demo-card">
+      <div class="demo-hdr">
+        <span class="demo-name">Smart goals</span>
+        <span class="demo-try">Try it →</span>
+      </div>
+      <div class="glist">
+        <div class="gitem">
+          <div class="gitem-hdr">
+            <span class="gnm">Monthly Budget</span>
+            <span class="gbadge g-ok-t" id="g1b">On track</span>
+          </div>
+          <div class="gsub" id="g1s">€1.005 spent of €1.500 · €495 remaining</div>
+          <div class="gtrack"><div class="gbar g-ok" id="g1r" style="width:0%"></div></div>
+        </div>
+        <div class="gitem">
+          <div class="gitem-hdr">
+            <span class="gnm">Dining</span>
+            <span class="gbadge g-warn-t">Caution</span>
+          </div>
+          <div class="gsub">€178 spent of €200 · €22 remaining</div>
+          <div class="gtrack"><div class="gbar g-warn" id="g2r" style="width:0%"></div></div>
+        </div>
+      </div>
+      <button class="gadd" onclick="goalAdd()">+ Add €50 to budget</button>
     </div>
 
-    <div class="feat-card">
-      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="5" y="2" width="14" height="20" rx="2"/>
-        <path d="M9 7h6M9 11h6M9 15h4"/>
-      </svg>
-      <h3 class="feat-title">Works everywhere</h3>
-      <p class="feat-desc">Installs as a PWA on iPhone and Mac in two taps. Signs in with a magic link — no password to forget. Syncs instantly across every device via the cloud.</p>
+    <!-- ── Demo 4: Receipt Scanner ── -->
+    <div class="demo-card">
+      <div class="demo-hdr">
+        <span class="demo-name">Receipt scanner</span>
+        <span class="demo-try">Try it →</span>
+      </div>
+      <div class="scan-s" id="sc-idle">
+        <button class="scan-btn" onclick="scanGo()"><span id="scBtnTxt">📷 Scan a receipt</span></button>
+        <span class="scan-hint">Tap to try the scan flow</span>
+      </div>
+      <div class="scan-s off" id="sc-load">
+        <div class="spin"></div>
+        <span class="spin-lbl">Reading receipt…</span>
+      </div>
+      <div class="scan-s off" id="sc-res" style="align-items:stretch;justify-content:flex-start;">
+        <div class="srf">
+          <div class="sf"><span class="sfl">Merchant</span><span class="sfv" id="sfm"></span></div>
+          <div class="sf"><span class="sfl">Amount</span><span class="sfv" id="sfa"></span></div>
+          <div class="sf"><span class="sfl">Category</span><span class="sfv" id="sfc"></span></div>
+          <div class="sf"><span class="sfl">Date</span><span class="sfv" id="sfd"></span></div>
+        </div>
+        <button class="scan-save" onclick="scanSave()">Save expense →</button>
+      </div>
+      <div class="scan-s off" id="sc-done">
+        <div class="scan-chk">✓</div>
+        <div class="scan-svd-lbl">Expense saved!</div>
+        <button class="scan-rst" onclick="scanRst()">Try again</button>
+      </div>
     </div>
 
   </div>
@@ -659,5 +825,139 @@
   </div>
 </footer>
 
+
+<script>
+(function(){
+  // ── Demo 1: Donut ─────────────────────────────────────────────
+  var C=251.33;
+  var segs=document.querySelectorAll('.dseg');
+  var finals=[100.28,54.82,27.57,45.72,22.86];
+  var segNames=['Groceries','Dining','Transport','Shopping','Other'];
+  var segAmts=['€342','€187','€94','€156','€78'];
+  var dcA=document.getElementById('dcA');
+  var dcL=document.getElementById('dcL');
+
+  function donutAnimate(){
+    segs.forEach(function(s,i){
+      setTimeout(function(){ s.style.strokeDasharray=finals[i]+' '+(C-finals[i]); },i*160+100);
+    });
+  }
+  function donutHover(i){
+    dcA.textContent=segAmts[i]; dcL.textContent=segNames[i];
+    segs.forEach(function(s,j){ s.style.opacity=j===i?'1':'0.25'; });
+  }
+  function donutReset(){
+    dcA.textContent='€857'; dcL.textContent='total';
+    segs.forEach(function(s){ s.style.opacity='1'; });
+  }
+  segs.forEach(function(s,i){
+    s.addEventListener('pointerenter',function(){ donutHover(i); });
+    s.addEventListener('pointerleave',donutReset);
+    s.addEventListener('click',function(){ donutHover(i); });
+  });
+  document.querySelectorAll('.dleg-i').forEach(function(el){
+    var i=parseInt(el.dataset.idx);
+    el.addEventListener('pointerenter',function(){ donutHover(i); });
+    el.addEventListener('pointerleave',donutReset);
+  });
+
+  // ── Demo 2: Subscriptions ─────────────────────────────────────
+  var subMo={t:'€55,97',p:'per month',a:['€15,99','€9,99','€29,99']};
+  var subYr={t:'€671,64',p:'per year',a:['€191,88','€119,88','€359,88']};
+  var barW=[25,50,75,100];
+
+  function barsAnimate(){
+    barW.forEach(function(w,i){
+      setTimeout(function(){ document.getElementById('sb'+i).style.width=w+'%'; },i*130+150);
+    });
+  }
+  function barsReset(){
+    for(var i=0;i<4;i++) document.getElementById('sb'+i).style.width='0%';
+  }
+  window.subView=function(m){
+    var d=m==='mo'?subMo:subYr;
+    document.getElementById('stMo').classList.toggle('on',m==='mo');
+    document.getElementById('stYr').classList.toggle('on',m==='yr');
+    document.getElementById('subT').textContent=d.t;
+    document.getElementById('subP').textContent=d.p;
+    d.a.forEach(function(v,i){ document.getElementById('s'+i).textContent=v; });
+    barsReset(); setTimeout(barsAnimate,60);
+  };
+
+  // ── Demo 3: Goals ─────────────────────────────────────────────
+  var g1sp=1005, g1tot=1500;
+  function g1update(){
+    var pct=Math.round(g1sp/g1tot*100);
+    var bar=document.getElementById('g1r');
+    var badge=document.getElementById('g1b');
+    var sub=document.getElementById('g1s');
+    var rem=g1tot-g1sp;
+    var tier=pct>=100?'over':pct>=80?'warn':'ok';
+    bar.style.width=Math.min(pct,100)+'%';
+    bar.className='gbar g-'+tier;
+    badge.className='gbadge g-'+tier+'-t';
+    badge.textContent=pct>=100?'Over budget':pct>=80?'Caution':'On track';
+    sub.textContent='€'+g1sp.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')+
+      ' spent of €1.500 · '+(rem>0?'€'+rem+' remaining':'Over budget!');
+  }
+  window.goalAdd=function(){
+    if(g1sp<1600){ g1sp+=50; g1update(); }
+  };
+
+  // ── Demo 4: Receipt Scanner ───────────────────────────────────
+  var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var d=new Date();
+  var scanData=[
+    {id:'sfm',v:'Albert Heijn'},
+    {id:'sfa',v:'€ 47,23'},
+    {id:'sfc',v:'Groceries'},
+    {id:'sfd',v:d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear()}
+  ];
+  var scanIds=['sc-idle','sc-load','sc-res','sc-done'];
+  function scanShow(id){
+    scanIds.forEach(function(x){
+      document.getElementById(x).classList.toggle('off', x!==id);
+    });
+  }
+  function typewrite(id,txt){
+    var el=document.getElementById(id); el.textContent=''; var i=0;
+    var t=setInterval(function(){ el.textContent+=txt[i++]; if(i>=txt.length) clearInterval(t); },38);
+  }
+  window.scanGo=function(){
+    scanData.forEach(function(f){ document.getElementById(f.id).textContent=''; });
+    scanShow('sc-load');
+    setTimeout(function(){
+      scanShow('sc-res');
+      scanData.forEach(function(f,i){ setTimeout(function(){ typewrite(f.id,f.v); },i*300); });
+    },1700);
+  };
+  window.scanSave=function(){ scanShow('sc-done'); };
+  window.scanRst=function(){ scanShow('sc-idle'); };
+
+  // ── Init on scroll into view ──────────────────────────────────
+  var inited=false;
+  var grid=document.querySelector('.feat-grid');
+  function initDemos(){
+    if(inited) return; inited=true;
+    donutAnimate();
+    barsAnimate();
+    setTimeout(function(){
+      document.getElementById('g1r').style.width='67%';
+      document.getElementById('g2r').style.width='89%';
+    },400);
+  }
+  if(grid&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(ents){
+      if(ents[0].isIntersecting) initDemos();
+    },{threshold:0.1}).observe(grid);
+  } else { initDemos(); }
+
+  // Mobile button copy
+  if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
+    var btn=document.getElementById('scBtnTxt');
+    if(btn) btn.textContent='📷 Point camera at receipt';
+  }
+})();
+</script>
 </body>
 </html>
