@@ -39,7 +39,6 @@ export function AuthProvider({ children }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('[auth] event:', event, session?.user?.email ?? 'no user')
       // Always update session on any auth event so token refresh and
       // sign-in from the hash (#access_token=…) are picked up immediately.
       resolved = true

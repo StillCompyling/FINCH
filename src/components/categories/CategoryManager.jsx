@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useStore, newId } from '../../store/StoreProvider.jsx'
+import { sanitizeText, validateCategory } from '../../utils/validate.js'
 import { Sheet, Field, inputClass, PrimaryButton, GhostButton } from '../ui/Sheet.jsx'
 
 // Tonal swatches in the app's data-viz family: greens first, then neutrals.
@@ -58,10 +59,11 @@ function CategorySheet({ category, onClose }) {
   const inUse = category && state.expenses.some((e) => e.categoryId === category.id)
 
   const save = () => {
-    if (!name.trim()) return
+    const cleanName = sanitizeText(name, 50)
+    if (!cleanName || validateCategory({ name: cleanName, color })) return
     actions.upsert('category', {
       id: category?.id ?? newId(),
-      name: name.trim(),
+      name: cleanName,
       color,
       icon: category?.icon ?? 'dots',
     })

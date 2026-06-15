@@ -103,13 +103,9 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
       if (!blob) {
         blob = file
       } else {
-        console.log('[scan] pass 1 size', Math.round(blob.size / 1024), 'KB')
         if (blob.size > 150 * 1024) {
           const blob2 = await resizeImage(blob, 400, 0.4)
-          if (blob2) {
-            blob = blob2
-            console.log('[scan] pass 2 size', Math.round(blob.size / 1024), 'KB')
-          }
+          if (blob2) blob = blob2
         }
       }
 
@@ -123,10 +119,8 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
         return
       }
 
-      console.log('[scan] sending image', Math.round(imageBase64.length * 0.75 / 1024), 'KB')
-
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 60000)
+      const timeoutId = setTimeout(() => controller.abort(), 15000)
 
       let res
       try {
@@ -142,8 +136,6 @@ export const ReceiptScanner = forwardRef(function ReceiptScanner({ onScan }, ref
       } finally {
         clearTimeout(timeoutId)
       }
-
-      console.log('[scan] response', res.status, res.ok)
 
       if (res.status === 401) throw Object.assign(new Error(), { code: 'auth' })
       if (res.status === 502) throw Object.assign(new Error(), { code: 'unavailable' })

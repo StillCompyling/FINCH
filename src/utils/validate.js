@@ -1,15 +1,16 @@
 const MAX_AMOUNT_CENTS = 99_999_999 // €999,999.99
 const MAX_NOTE_LENGTH = 500
-const HTML_TAG_RE = /<[^>]*>/g
 
-export function sanitizeText(s) {
-  return s.replace(HTML_TAG_RE, '').trim()
+export function sanitizeText(s, maxLength = MAX_NOTE_LENGTH) {
+  if (typeof s !== 'string') return ''
+  return s
+    .replace(/<[^>]*>/g, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+    .trim()
+    .slice(0, maxLength)
 }
 
-/**
- * Validates expense fields. Returns an error string or null if valid.
- * Call before saving — this is the last line of defence before Supabase.
- */
 export function validateExpense({ amountCents, date, note, categoryId, validCategoryIds }) {
   if (!amountCents || amountCents <= 0) return 'Amount must be greater than zero.'
   if (amountCents > MAX_AMOUNT_CENTS) return 'Amount cannot exceed €999,999.99.'
@@ -36,5 +37,13 @@ export function validateRecurring({ amountCents, name, startDate }) {
   if (!amountCents || amountCents <= 0) return 'Amount must be greater than zero.'
   if (amountCents > MAX_AMOUNT_CENTS) return 'Amount cannot exceed €999,999.99.'
   if (!startDate) return 'Start date is required.'
+  return null
+}
+
+export function validateCategory({ name, color }) {
+  const trimmed = name?.trim() ?? ''
+  if (!trimmed) return 'Name is required.'
+  if (trimmed.length > 50) return 'Name must be 50 characters or fewer.'
+  if (color && !/^#[0-9a-fA-F]{6}$/.test(color)) return 'Invalid color.'
   return null
 }

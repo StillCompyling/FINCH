@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useStore, newId } from '../../store/StoreProvider.jsx'
+import { sanitizeText, validateRecurring } from '../../utils/validate.js'
 import { useCategoryIndex } from '../../hooks/useMonthData.js'
 import { annualizedCents, projectionLadder, CYCLES } from '../../utils/recurrence.js'
 import { formatCents, formatCentsWhole, parseToCents } from '../../utils/money.js'
@@ -198,10 +199,11 @@ function RecurringSheet({ sub, onClose }) {
   const valid = name.trim() && cents !== null && cents > 0 && startDate
 
   const save = () => {
-    if (!valid) return
+    const cleanName = sanitizeText(name, 100)
+    if (!valid || validateRecurring({ amountCents: cents, name: cleanName, startDate })) return
     actions.upsert('recurring', {
       id: sub?.id ?? newId(),
-      name: name.trim(),
+      name: cleanName,
       amountCents: cents,
       cycle,
       startDate,
