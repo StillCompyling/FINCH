@@ -56,10 +56,14 @@
       --bg-raised:   #fdf8f2;
       --ink:         #1c1a17;
       --ink-soft:    #5a5550;
-      --ink-faint:   #8a8580;
+      --ink-faint:   #6a655e;
       --card:        #ffffff;
       --line:        rgba(28,26,23,0.10);
       --accent:      #5bb98c;
+      --accent-text: #14713a;
+      --ok-text:     #157a3e;
+      --warn-text:   #b45309;
+      --over-text:   #c4303a;
       --pink:        #f1bcc2;
       --card-shadow: 2px 2px 0 0 #1c1a17;
       --btn-shadow:  3px 3px 0 0 #1c1a17;
@@ -75,12 +79,16 @@
         --bg-raised:   #211e1a;
         --ink:         #e8e2d9;
         --ink-soft:    #a09890;
-        --ink-faint:   #6a6460;
+        --ink-faint:   #8d867f;
         --card:        #231f1b;
         --line:        rgba(232,226,217,0.09);
         --card-shadow: 2px 2px 0 0 rgba(232,226,217,0.22);
         --btn-shadow:  3px 3px 0 0 rgba(232,226,217,0.22);
         --border:      1.5px solid rgba(232,226,217,0.28);
+        --accent-text: #5bb98c;
+        --ok-text:     #5bb98c;
+        --warn-text:   #e0913a;
+        --over-text:   #f26d75;
       }
     }
 
@@ -144,12 +152,13 @@
     }
     .btn:hover  { transform: translate(1px,1px); box-shadow: 2px 2px 0 0 var(--ink); }
     .btn:active { transform: translate(3px,3px); box-shadow: none; }
-    .btn-pink  { background: var(--pink); }
+    .btn-pink  { background: var(--pink); color: #1c1a17; }
     .btn-ghost { background: var(--bg-raised); }
     .btn-lg    { font-size: 0.8rem; padding: 0.8rem 2rem; }
 
     /* ─── Hero ────────────────────────────────── */
     .hero {
+      position: relative;
       max-width: 1120px;
       margin: 0 auto;
       padding: 5rem 2rem 4rem;
@@ -467,7 +476,7 @@
     }
     .demo-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.9rem; }
     .demo-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); }
-    .demo-try { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+    .demo-try { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-text); }
 
     /* Donut */
     .donut-demo { display: flex; flex-direction: column; align-items: center; flex: 1; }
@@ -502,7 +511,7 @@
     .gitem-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.2rem; }
     .gnm { font-size: 0.7rem; color: var(--ink); }
     .gbadge { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
-    .g-ok-t { color: #178a4c; } .g-warn-t { color: #b45309; } .g-over-t { color: #c4303a; }
+    .g-ok-t { color: var(--ok-text); } .g-warn-t { color: var(--warn-text); } .g-over-t { color: var(--over-text); }
     .gsub { font-size: 0.56rem; color: var(--ink-faint); margin-bottom: 0.35rem; }
     .gtrack { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
     .gbar { height: 100%; border-radius: 999px; transition: width 0.5s ease, background-color 0.4s ease; }
@@ -516,7 +525,7 @@
     /* Scanner */
     .scan-s { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 0.6rem; text-align: center; }
     .scan-s.off { display: none !important; }
-    .scan-btn { font-family: var(--font); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--pink); border: var(--border); border-radius: var(--radius); padding: 0.7rem 1.4rem; cursor: pointer; color: var(--ink); box-shadow: var(--btn-shadow); transition: transform 0.08s, box-shadow 0.08s; }
+    .scan-btn { font-family: var(--font); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--pink); border: var(--border); border-radius: var(--radius); padding: 0.7rem 1.4rem; cursor: pointer; color: #1c1a17; box-shadow: var(--btn-shadow); transition: transform 0.08s, box-shadow 0.08s; }
     .scan-btn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 0 var(--ink); }
     .scan-btn:active { transform: translate(3px,3px); box-shadow: none; }
     .scan-hint { font-size: 0.52rem; color: var(--ink-faint); }
@@ -528,13 +537,59 @@
     .sf:last-of-type { border-bottom: none; }
     .sfl { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); width: 58px; flex-shrink: 0; }
     .sfv { font-size: 0.7rem; color: var(--ink); min-height: 1em; }
-    .scan-save { margin-top: 0.6rem; font-family: var(--font); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); border: var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; cursor: pointer; color: #fff; box-shadow: 2px 2px 0 0 var(--ink); transition: transform 0.08s, box-shadow 0.08s; }
+    .scan-save { margin-top: 0.6rem; font-family: var(--font); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); border: var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; cursor: pointer; color: #1c1a17; box-shadow: 2px 2px 0 0 var(--ink); transition: transform 0.08s, box-shadow 0.08s; }
     .scan-save:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
     .scan-chk { font-size: 2.2rem; color: var(--accent); }
     .scan-svd-lbl { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); }
     .scan-rst { font-family: var(--font); font-size: 0.56rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: none; border: var(--border); border-radius: var(--radius); padding: 0.35rem 0.85rem; cursor: pointer; color: var(--ink-faint); margin-top: 0.2rem; }
 
     @media (max-width: 800px) { .demo-card { min-height: 260px; } }
+
+    /* ─── Scroll-triggered animations ─────────────── */
+    .animate {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 500ms ease-out, transform 500ms ease-out;
+      transition-delay: var(--delay, 0ms);
+      will-change: opacity, transform;
+    }
+    .animate.fade-only { transform: none; }
+    .animate.visible { opacity: 1; transform: none; }
+
+    /* ─── Hero scroll cue ─────────────────────────── */
+    .scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--ink-faint);
+      font-size: 0.5rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: opacity 0.4s ease;
+      animation: cueBounce 1.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .scroll-cue svg { width: 18px; height: 18px; }
+    @keyframes cueBounce {
+      0%, 100% { transform: translate(-50%, 0); }
+      50%      { transform: translate(-50%, 6px); }
+    }
+    @media (max-width: 800px) { .scroll-cue { display: none; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .animate {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .scroll-cue { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -549,7 +604,7 @@
 <section class="hero">
 
   <div class="hero-text">
-    <span class="eyebrow">personal finance made aesthetic</span>
+    <span class="eyebrow animate">personal finance made aesthetic</span>
 
     <!--
       ── Headline options — uncomment one ──────────────────────────────
@@ -558,15 +613,15 @@
       3. Track every euro. Own every decision.
       ─────────────────────────────────────────────────────────────────
     -->
-    <h1 class="headline">Your finances,<br><em>finally clear.</em></h1>
+    <h1 class="headline animate" style="--delay:100ms">Your finances,<br><em>finally clear.</em></h1>
 
-    <p class="subhead">
+    <p class="subhead animate" style="--delay:200ms">
       Finch tracks your spending, visualises where every euro goes, and shows you
       the real long-term cost of every subscription.
       Beautiful on iPhone and Mac. Free, always.
     </p>
 
-    <div class="hero-cta">
+    <div class="hero-cta animate" style="--delay:400ms">
       <a href="/app" class="btn btn-pink btn-lg">Try Finch free →</a>
       <span class="hero-note">No password &nbsp;·&nbsp; No credit card</span>
     </div>
@@ -670,17 +725,24 @@
     </div>
 
   </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
 </section>
 
 <hr class="divider max-w" />
 
 <!-- ═══ Features ══════════════════════════════════════════════════════ -->
 <section class="section">
-  <p class="sec-label">What Finch does</p>
+  <p class="sec-label animate">What Finch does</p>
   <div class="feat-grid">
 
     <!-- ── Demo 1: Donut Chart ── -->
-    <div class="demo-card">
+    <div class="demo-card animate" style="--delay:0ms">
       <div class="demo-hdr">
         <span class="demo-name">Beautiful charts</span>
         <span class="demo-try">Try it →</span>
@@ -721,7 +783,7 @@
     </div>
 
     <!-- ── Demo 2: Subscription Tracker ── -->
-    <div class="demo-card">
+    <div class="demo-card animate" style="--delay:120ms">
       <div class="demo-hdr">
         <span class="demo-name">Subscription tracker</span>
         <span class="demo-try">Try it →</span>
@@ -748,7 +810,7 @@
     </div>
 
     <!-- ── Demo 3: Smart Goals ── -->
-    <div class="demo-card">
+    <div class="demo-card animate" style="--delay:240ms">
       <div class="demo-hdr">
         <span class="demo-name">Smart goals</span>
         <span class="demo-try">Try it →</span>
@@ -775,7 +837,7 @@
     </div>
 
     <!-- ── Demo 4: Receipt Scanner ── -->
-    <div class="demo-card">
+    <div class="demo-card animate" style="--delay:360ms">
       <div class="demo-hdr">
         <span class="demo-name">Receipt scanner</span>
         <span class="demo-try">Try it →</span>
@@ -811,13 +873,13 @@
 
 <!-- ═══ Final CTA ══════════════════════════════════════════════════════ -->
 <section class="cta-block">
-  <h2 class="cta-headline">Start tracking<br><em>in 30 seconds.</em></h2>
-  <p class="cta-note">No password. No credit card. Just your email.</p>
-  <a href="/app" class="btn btn-pink btn-lg">Try Finch free →</a>
+  <h2 class="cta-headline animate" style="--delay:0ms">Start tracking<br><em>in 30 seconds.</em></h2>
+  <p class="cta-note animate" style="--delay:100ms">No password. No credit card. Just your email.</p>
+  <a href="/app" class="btn btn-pink btn-lg animate" style="--delay:200ms">Try Finch free →</a>
 </section>
 
 <!-- ═══ Footer ═════════════════════════════════════════════════════════ -->
-<footer>
+<footer class="animate fade-only">
   <div class="footer-inner">
     <a href="/" class="wordmark" style="font-size:1.1rem">Finch</a>
     <span class="footer-tag">Made with aesthetics in mind</span>
@@ -951,6 +1013,28 @@
       if(ents[0].isIntersecting) initDemos();
     },{threshold:0.1}).observe(grid);
   } else { initDemos(); }
+
+  // ── Scroll-triggered reveal (animate once) ────────────────────
+  var aEls=document.querySelectorAll('.animate');
+  if('IntersectionObserver' in window){
+    var ao=new IntersectionObserver(function(ents){
+      ents.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visible'); ao.unobserve(e.target); }
+      });
+    },{threshold:0.1});
+    aEls.forEach(function(el){ ao.observe(el); });
+  } else {
+    aEls.forEach(function(el){ el.classList.add('visible'); });
+  }
+
+  // ── Hero scroll cue: fade out as user leaves hero ─────────────
+  var cues=document.querySelectorAll('.scroll-cue');
+  if(cues.length){
+    window.addEventListener('scroll',function(){
+      var o=Math.max(0,1-window.scrollY/280);
+      cues.forEach(function(c){ c.style.opacity=o; });
+    },{passive:true});
+  }
 
   // Mobile button copy
   if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
