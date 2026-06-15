@@ -23,7 +23,8 @@ export function RecurringView({ onEditExpense }) {
 
   const combined = useMemo(() => {
     const annual = active.reduce((acc, r) => acc + annualizedCents(r.amountCents, r.cycle), 0)
-    return { annual, ladder: [1, 2, 5, 10].map((years) => ({ years, totalCents: annual * years })) }
+    const monthly = Math.round(annual / 12)
+    return { annual, monthly, ladder: [1, 2, 5, 10].map((years) => ({ years, totalCents: annual * years })) }
   }, [state.recurring]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -38,9 +39,12 @@ export function RecurringView({ onEditExpense }) {
         ) : (
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:gap-10">
             <div className="shrink-0">
-              <p className="figure-serif text-5xl">{formatCentsWhole(combined.annual)}</p>
+              <p className="figure-serif text-5xl">{formatCentsWhole(combined.monthly)}</p>
               <p className="mt-1 text-sm text-ink-soft dark:text-snow-soft">
-                per year · {active.length} active subscription{active.length !== 1 && 's'}
+                per month · {active.length} active subscription{active.length !== 1 && 's'}
+              </p>
+              <p className="mt-0.5 text-xs text-ink-faint dark:text-snow-faint">
+                {formatCentsWhole(combined.annual)} per year
               </p>
             </div>
             <CostLadder ladder={combined.ladder} large />
