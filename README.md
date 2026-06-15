@@ -102,3 +102,4 @@ src/
 tests/                      node --test suites for recurrence + CSV math
 public/icons/               PWA icons
 ```
+# HITCH
